@@ -14,7 +14,7 @@ public class BallSpawner : MonoBehaviour
     void Start()
     {
         SpawnBallsInCircle();
-        InitialPush();
+        // InitialPush();
     }
 
     public void SpawnBallsInCircle()

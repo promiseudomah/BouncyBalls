@@ -53,7 +53,7 @@ public class GameController : MonoBehaviour
     {
         ballSpawner.ClearBalls();
         ballSpawner.SpawnBallsInCircle();
-        ballSpawner.InitialPush();
+        // ballSpawner.InitialPush();
     }
 
     public void Restart()

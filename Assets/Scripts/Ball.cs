@@ -3,52 +3,93 @@ using UnityEngine;
 
 public class Ball : MonoBehaviour
 {
-    public int teamId;
+    // public int teamId;
+
     public enum Team
     {
         A,
         B
     }
-        
+
     public Team team;
+
     [SerializeField] float arenaRadius = 1.7f;
     [SerializeField] float attractionDistance = 0.5f;
     [SerializeField] float attractionForce = 3f;
+    [SerializeField] float maxSpeed, minSpeed;
+    [SerializeField] float bounceForce = 10f;
+    [SerializeField] float directionRandomness = 0.3f;
+    [SerializeField] float forceRandomness = 0.3f;
+
     Rigidbody2D rb;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        Debug.Log(this.gameObject.name + ": Active");
+        Debug.Log(gameObject.name + ": Active");
     }
 
     void FixedUpdate()
     {
-        float distanceFromCenter = Vector2.Distance(rb.position, Vector2.zero);
+        // float distanceFromCenter = Vector2.Distance(rb.position, Vector2.zero);
+        // float distanceToEdge = arenaRadius - distanceFromCenter;
 
-        float distanceToEdge = arenaRadius - distanceFromCenter;
+        // if (distanceToEdge <= attractionDistance)
+        // {
+        //     Vector2 directionToCenter =
+        //         ((Vector2)Vector2.zero - rb.position).normalized;
 
-        if (distanceToEdge <= attractionDistance)
+        //     rb.AddForce(directionToCenter * attractionForce);
+        // }
+
+        FaceDirection();
+        CapSpeed();
+        Debug.Log(rb.linearVelocity);
+    }
+
+    void FaceDirection()
+    {
+        if(rb.linearVelocity.sqrMagnitude > 0.01f)
         {
-            Vector2 directionToCenter =
-                ((Vector2)Vector2.zero - rb.position).normalized;
-
-            rb.AddForce(directionToCenter * attractionForce);
+            float angle = Mathf.Atan2(rb.linearVelocity.y, rb.linearVelocity.x) * Mathf.Rad2Deg;
+            transform.rotation = Quaternion.Euler(0, 0, angle);
         }
     }
 
-    /// Sent when an incoming collider makes contact with this object's
-    /// collider (2D physics only).
-    /// <param name="other">The Collision2D data associated with this collision.</param>
+    void CapSpeed()
+    {
+        float currentSpeed = rb.linearVelocity.magnitude;
+
+        if (currentSpeed > maxSpeed)
+        {
+            rb.linearVelocity =
+                rb.linearVelocity.normalized * maxSpeed;
+        }
+    }
+
     private void OnCollisionEnter2D(Collision2D other)
     {
-        if(other.gameObject.CompareTag("Ball"))
-        {
-            Debug.Log("Collided with another ball!");
-        }
+        ContactPoint2D contact = other.GetContact(0);
 
-        if(other.gameObject.CompareTag("Net"))
+        Vector2 bounceDir = Vector2.Reflect(
+            rb.linearVelocity.normalized,
+            contact.normal);
+
+        bounceDir += Random.insideUnitCircle * directionRandomness;
+        bounceDir.Normalize();
+
+        float speed = Mathf.Clamp(
+            rb.linearVelocity.magnitude,
+            minSpeed,
+            maxSpeed);
+
+        rb.linearVelocity = bounceDir * speed;
+
+        rb.AddForce(
+            bounceDir * (bounceForce * 0.25f),
+            ForceMode2D.Impulse);
+
+        if (other.gameObject.CompareTag("Net"))
         {
             GameController.Instance.OnGoalScored(this);
         }
