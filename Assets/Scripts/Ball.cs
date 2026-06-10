@@ -13,13 +13,13 @@ public class Ball : MonoBehaviour
 
     public Team team;
 
-    [SerializeField] float arenaRadius = 1.7f;
-    [SerializeField] float attractionDistance = 0.5f;
-    [SerializeField] float attractionForce = 3f;
+    [SerializeField] float forceStrength;
     [SerializeField] float maxSpeed, minSpeed;
     [SerializeField] float bounceForce = 10f;
-    [SerializeField] float directionRandomness = 0.3f;
-    [SerializeField] float forceRandomness = 0.3f;
+    public float wallBounceSpeed;
+    private PolygonCollider2D torusCollider;
+    public float minY = 1f;
+    public float attractRadius = 1.5f;
 
     Rigidbody2D rb;
 
@@ -27,27 +27,17 @@ public class Ball : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         Debug.Log(gameObject.name + ": Active");
+        torusCollider = GameObject.Find("Torus").GetComponent<PolygonCollider2D>();
     }
 
     void FixedUpdate()
     {
-        // float distanceFromCenter = Vector2.Distance(rb.position, Vector2.zero);
-        // float distanceToEdge = arenaRadius - distanceFromCenter;
-
-        // if (distanceToEdge <= attractionDistance)
-        // {
-        //     Vector2 directionToCenter =
-        //         ((Vector2)Vector2.zero - rb.position).normalized;
-
-        //     rb.AddForce(directionToCenter * attractionForce);
-        // }
-
         FaceDirection();
         CapSpeed();
-        Debug.Log(rb.linearVelocity);
+        AttractTowardsBounds();
     }
 
-    void FaceDirection()
+    private void FaceDirection()
     {
         if(rb.linearVelocity.sqrMagnitude > 0.01f)
         {
@@ -56,7 +46,7 @@ public class Ball : MonoBehaviour
         }
     }
 
-    void CapSpeed()
+    private void CapSpeed()
     {
         float currentSpeed = rb.linearVelocity.magnitude;
 
@@ -65,33 +55,52 @@ public class Ball : MonoBehaviour
             rb.linearVelocity =
                 rb.linearVelocity.normalized * maxSpeed;
         }
+        
+        Debug.Log(rb.linearVelocity);
+    }
+
+    private void AttractTowardsBounds()
+    {
+        if (rb.position.y >= minY)
+        {
+            Vector2 closestPoint = torusCollider.ClosestPoint(rb.position);
+            Vector2 direction = (closestPoint - rb.position);
+
+            float distance = direction.magnitude;
+            if(distance <= attractRadius && distance > 0.01f)
+            {
+                Vector2 attractionForce = direction.normalized * forceStrength;
+                rb.AddForce(attractionForce, ForceMode2D.Force);
+                Debug.LogWarning("Attracting ball towards torus bound with force: " + attractionForce);
+            }
+        }
     }
 
     private void OnCollisionEnter2D(Collision2D other)
     {
-        ContactPoint2D contact = other.GetContact(0);
+        if (other.gameObject.CompareTag("Ball"))
+        {
+            Vector2 bounceDir = rb.linearVelocity.normalized;
+            rb.AddForce(bounceDir * bounceForce, ForceMode2D.Impulse);
+            GameController.Instance.PlayCollisionSound();
+        }
 
-        Vector2 bounceDir = Vector2.Reflect(
-            rb.linearVelocity.normalized,
-            contact.normal);
-
-        bounceDir += Random.insideUnitCircle * directionRandomness;
-        bounceDir.Normalize();
-
-        float speed = Mathf.Clamp(
-            rb.linearVelocity.magnitude,
-            minSpeed,
-            maxSpeed);
-
-        rb.linearVelocity = bounceDir * speed;
-
-        rb.AddForce(
-            bounceDir * (bounceForce * 0.25f),
-            ForceMode2D.Impulse);
-
+        if (other.gameObject.CompareTag("Bounds"))
+        {
+            Vector2 normal = rb.position.normalized;
+            rb.linearVelocity =  rb.linearVelocity.normalized * wallBounceSpeed;
+            GameController.Instance.PlayCollisionSound();
+        }        
+        
         if (other.gameObject.CompareTag("Net"))
         {
             GameController.Instance.OnGoalScored(this);
+            GameController.Instance.PlayCollisionSound();
+        }
+
+        if(rb.position.y > 0.9f)
+        {
+            rb.AddForce(Vector2.up * forceStrength, ForceMode2D.Force);
         }
     }
 }

@@ -10,6 +10,8 @@ public class GameController : MonoBehaviour
     float teamB_Score;
     [SerializeField] TextMeshProUGUI scoreA_Text;
     [SerializeField] TextMeshProUGUI scoreB_Text;
+    public AudioSource audioSource;
+    public AudioClip collisionClip, netClip, crowdJubilationClip;
 
     /// Awake is called when the script instance is being loaded.
     private void Awake()
@@ -51,13 +53,25 @@ public class GameController : MonoBehaviour
 
     public void OnScoreContinue()
     {
+        PlayScoreSound();
         ballSpawner.ClearBalls();
         ballSpawner.SpawnBallsInCircle();
-        // ballSpawner.InitialPush();
+        ballSpawner.InitialPush();
     }
 
     public void Restart()
     {
         Debug.Log("Restart!");
+    }
+
+    public void PlayCollisionSound()
+    {
+        audioSource.PlayOneShot(collisionClip, 0.6f);
+    }
+
+    public void PlayScoreSound()
+    {
+        audioSource.PlayOneShot(netClip, 0.6f);
+        audioSource.PlayOneShot(crowdJubilationClip, 0.6f);
     }
 }

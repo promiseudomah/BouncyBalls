@@ -324,6 +324,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GameController
   scoreA_Text: {fileID: 590165825}
   scoreB_Text: {fileID: 1865949621}
+  audioSource: {fileID: 1348020394}
+  collisionClip: {fileID: 0}
+  netClip: {fileID: 0}
+  crowdJubilationClip: {fileID: 0}
 --- !u!4 &305405247
 Transform:
   m_ObjectHideFlags: 0
@@ -336,7 +340,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1348020395}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &407861229
@@ -352,7 +357,7 @@ GameObject:
   - component: {fileID: 407861232}
   m_Layer: 0
   m_Name: Borders
-  m_TagString: Untagged
+  m_TagString: Bounds
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -778,7 +783,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 00
+  m_text: 0
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -988,7 +993,7 @@ GameObject:
   - component: {fileID: 1136202934}
   m_Layer: 0
   m_Name: Spawner
-  m_TagString: Untagged
+  m_TagString: Net
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1006,11 +1011,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BallSpawner
   ballPrefabs:
-  - {fileID: 3180410222845905968, guid: d0242de6a11b23d4f90226e4dfb7342a, type: 3}
-  - {fileID: 2374196149489520005, guid: 559ac23b1b0c47a4a820363fb4af81f4, type: 3}
+  - {fileID: 5596280514147985618, guid: d0242de6a11b23d4f90226e4dfb7342a, type: 3}
+  - {fileID: 5019533938793370875, guid: 559ac23b1b0c47a4a820363fb4af81f4, type: 3}
   target: {fileID: 82344550}
-  radius: 1.8
-  initialForce: 6
+  radius: 1.7
 --- !u!4 &1136202935
 Transform:
   m_ObjectHideFlags: 0
@@ -1057,7 +1061,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 0
-  m_Volume: 0.6
+  m_Volume: 1
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -1149,12 +1153,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1348020393}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -0.55303, y: 0.03106, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 305405247}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1348912317
 GameObject:
@@ -1200,8 +1204,8 @@ GameObject:
   - component: {fileID: 1587919647}
   - component: {fileID: 1587919650}
   m_Layer: 0
-  m_Name: Circle
-  m_TagString: Untagged
+  m_Name: Torus
+  m_TagString: Bounds
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1216,7 +1220,7 @@ PolygonCollider2D:
   m_Enabled: 1
   serializedVersion: 3
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 9c6843c19e71f244c90cf6f09f961293, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -1936,7 +1940,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.25, y: 0.25, z: 0.25}
+  m_LocalScale: {x: 0.23, y: 0.23, z: 0.23}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 831807008}
@@ -2006,7 +2010,7 @@ GameObject:
   - component: {fileID: 1857095431}
   m_Layer: 0
   m_Name: Borders
-  m_TagString: Untagged
+  m_TagString: Bounds
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2193,7 +2197,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 00
+  m_text: 0
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -2549,6 +2553,5 @@ SceneRoots:
   - {fileID: 305405247}
   - {fileID: 1136202935}
   - {fileID: 1587919649}
-  - {fileID: 1348020395}
   - {fileID: 458935554}
   - {fileID: 1986311919}

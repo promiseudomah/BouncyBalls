@@ -1,5 +1,6 @@
 using System.Linq;
 using System.Runtime.ConstrainedExecution;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class BallSpawner : MonoBehaviour
@@ -7,14 +8,13 @@ public class BallSpawner : MonoBehaviour
     [SerializeField] Rigidbody2D[] ballPrefabs;
     [SerializeField] Transform target;
     [SerializeField] float radius = 3f;
-    [SerializeField] float initialForce = 8f;
     Rigidbody2D[] spawnedBalls;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         SpawnBallsInCircle();
-        // InitialPush();
+        InitialPush();
     }
 
     public void SpawnBallsInCircle()
@@ -43,6 +43,8 @@ public class BallSpawner : MonoBehaviour
             Vector2 targetPosition = target.position;
             Vector2 direction = (rb.position - targetPosition).normalized;
 
+            Ball ball = rb.GetComponent<Ball>();
+            float  initialForce = ball.wallBounceSpeed;
             rb.AddForce(direction * initialForce, ForceMode2D.Impulse);
         }
     }
