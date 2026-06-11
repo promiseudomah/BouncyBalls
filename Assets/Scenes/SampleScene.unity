@@ -325,9 +325,9 @@ MonoBehaviour:
   scoreA_Text: {fileID: 590165825}
   scoreB_Text: {fileID: 1865949621}
   audioSource: {fileID: 1348020394}
-  collisionClip: {fileID: 0}
-  netClip: {fileID: 0}
-  crowdJubilationClip: {fileID: 0}
+  collisionClip: {fileID: 8300000, guid: 945be87dd5cdc094c8ff2275ecb459f7, type: 3}
+  netClip: {fileID: 8300000, guid: 6c88d466ca55b854c9ab2dedffa9b724, type: 3}
+  crowdJubilationClip: {fileID: 8300000, guid: 5850108c344476c4c96e0a818c13c227, type: 3}
 --- !u!4 &305405247
 Transform:
   m_ObjectHideFlags: 0
